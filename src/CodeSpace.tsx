@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import Editor, { EditorProps } from "@monaco-editor/react";
-import { pyodide } from './main';
 import { Grid, Paper, Typography, styled } from '@mui/material';
 import React from 'react';
+import loadScripts from './py_scripts/scriptList';
+
 
 
 function useDebounce<T extends (...args: any[]) => void>(callback: T, delay: number): T {
-    const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+    const [timeoutId, setTimeoutId] = useState<number | null>(null);
 
     function debounceCallback(...args: any[]) {
         if (timeoutId) {
@@ -33,24 +34,11 @@ const Wrapper = styled('div')(({ theme }) => ({
     height: '90vh',
 }));
 
-function CodeSpace() {
-    console.log("render")
-    const [output, setOutput] = useState<string>(''); // Define state for the output box
-    const [stdOut, setStdOut] = useState<string>('');
+function CodeSpace(props: any) {
+    const [pyodide, setPyodide] = useState<any>(null);
 
-    // define a custom output handler
-    const outputHandler = (text: String) => {
-        // handle the output text here
-        console.log(text);
-        setStdOut((prevStdOut) => {
-            return prevStdOut + text + "\r\n"
-        });
-    };
-    // redirect Python's stdout to the custom output handler
-    pyodide.setStdout({batched: outputHandler});
 
-    // Run these only once
-    useEffect(() => {
+    async function initialize(): Promise<any> {
         // define a custom output handler
         const outputHandler = (text: String) => {
             // handle the output text here
@@ -59,12 +47,30 @@ function CodeSpace() {
                 return prevStdOut + text + "\r\n"
             });
         };
-        // redirect Python's stdout to the custom output handler
-        pyodide.setStdout({batched: outputHandler});
-      }, []);
 
-    function handleEditorChange(value: string, event: any) {
-        setStdOut("")
+        const pyodide = await window.loadPyodide();
+        console.log(pyodide)
+        await pyodide.loadPackage("micropip");
+        const micropip = pyodide.pyimport("micropip");
+        await micropip.install('numpy');
+        const scripts = await loadScripts();
+        console.log(scripts)
+        pyodide.setStdout({batched: outputHandler});
+        return pyodide;
+      }
+
+    useEffect(() => {
+        console.log("effect")
+        initialize().then((pyodide) => {
+            setPyodide(pyodide);
+        });
+        
+      }, []);
+    
+    const [stdOut, setStdOut] = useState<string>('');
+
+    function handleEditorChange(value: string | undefined, event: EditorProps) {
+        console.log("running")
         pyodide.runPython(value);
     }
 

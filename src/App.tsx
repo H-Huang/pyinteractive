@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -21,6 +21,14 @@ import MailIcon from '@mui/icons-material/Mail';
 import CodeSpace from './CodeSpace';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import Link from '@mui/material/Link';
+import loadScripts from './py_scripts/scriptList';
+
+declare global {
+  interface Window {
+    loadPyodide: () => Promise<any>;
+  }
+}
+
 
 const drawerWidth = 220;
 
@@ -73,9 +81,9 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
-export default function PersistentDrawerLeft() {
+export default function App() {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -145,7 +153,7 @@ export default function PersistentDrawerLeft() {
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
-        <CodeSpace />
+        <CodeSpace/>
       </Main>
     </Box>
   );
