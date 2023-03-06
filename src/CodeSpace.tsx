@@ -69,7 +69,7 @@ function CodeSpace(props: any) {
     
     const [stdOut, setStdOut] = useState<string>('');
 
-    function handleEditorChange(value: string | undefined, event: EditorProps) {
+    function handleEditorChange(value: string | undefined, event: any) {
         console.log("running")
         pyodide.runPython(value);
     }
