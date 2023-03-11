@@ -1,3 +1,4 @@
+import numpy as np
 # Example for numpy broadcasting
 a = np.array([1, 2, 3])
 b = np.array([4, 5, 6])

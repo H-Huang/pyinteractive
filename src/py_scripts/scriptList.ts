@@ -16,9 +16,9 @@ async function loadScripts() {
   await Promise.all(
     scriptList.map(async (script) => {
       console.log("in here")
-      const imgUrl = new URL(script.path, import.meta.url).href
-      console.log(imgUrl)
-      const response = await fetch(imgUrl);
+      const scriptURL = new URL(script.path, import.meta.url).href
+      console.log(scriptURL)
+      const response = await fetch(scriptURL);
       console.log(response)
       script.contents = await response.text();
       return script;
@@ -27,4 +27,4 @@ async function loadScripts() {
   return scriptList;
 }
 
-export default loadScripts;
+export { Script, loadScripts };

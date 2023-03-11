@@ -21,7 +21,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import CodeSpace from './CodeSpace';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import Link from '@mui/material/Link';
-import loadScripts from './py_scripts/scriptList';
+import { Script, loadScripts } from './py_scripts/scriptList';
 
 declare global {
   interface Window {
@@ -84,6 +84,8 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export default function App() {
   const theme = useTheme();
   const [open, setOpen] = useState(true);
+  const [scripts, setScripts] = useState<Script[]>([]);
+  const [activeScript, setActiveScript] = useState<Script | null>(null);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -92,6 +94,19 @@ export default function App() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  async function initialize() {
+    // load scripts
+    const scripts = await loadScripts();
+    console.log(scripts)
+    return scripts
+  }
+
+  useEffect(() => {
+    initialize().then((scripts) => {
+      setScripts(scripts);
+    });
+  }, [])
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -107,7 +122,7 @@ export default function App() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1}}>
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             PyInteractive
           </Typography>
           <IconButton
@@ -138,13 +153,13 @@ export default function App() {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
+          {scripts.map((script, index) => (
+            <ListItem key={script.path} disablePadding>
+              <ListItemButton onClick={() => setActiveScript(script)}>
                 <ListItemIcon>
                   {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                 </ListItemIcon>
-                <ListItemText primary={text} />
+                <ListItemText primary={script.path} />
               </ListItemButton>
             </ListItem>
           ))}
@@ -153,7 +168,7 @@ export default function App() {
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
-        <CodeSpace/>
+        <CodeSpace script={activeScript} />
       </Main>
     </Box>
   );
