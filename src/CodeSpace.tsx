@@ -50,10 +50,6 @@ print(f"x + y = {x + y}")`
     // const monaco = useMonaco();
 
     // const editorRef = useRef(null);
-    function handleEditorDidMount(editor: any, monaco: Monaco) {
-        console.log("in did mount")
-        console.log(editor.value)
-    }
     // if (script) {
     //     console.log("in here: " + script.contents)
     //     editorRef.value = script.contents
@@ -93,8 +89,8 @@ print(f"x + y = {x + y}")`
         console.log("effect")
         initialize().then((pyodide) => {
             setPyodide(pyodide);
+            pyodide.runPython(currentValue);
         });
-        
       }, []);
     
     const [stdOut, setStdOut] = useState<string>('');
@@ -121,7 +117,6 @@ print(f"x + y = {x + y}")`
                         onChange={(value, event) => {
                             debouncedHandleEditorChange(value, event)
                         }}
-                        onMount={handleEditorDidMount}
                     />
                 </Grid>
                 <Grid item xs={12} sm={5}>

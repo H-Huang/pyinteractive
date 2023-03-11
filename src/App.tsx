@@ -21,7 +21,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import CodeSpace from './CodeSpace';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import Link from '@mui/material/Link';
-import { Script, loadScripts } from './py_scripts/scriptList';
+import { Script, loadScripts } from './scriptList';
 
 declare global {
   interface Window {
