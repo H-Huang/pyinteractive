@@ -1,9 +1,13 @@
-// Add URL to this list for it to be recognized
+// Add file name to this list for it to be recognized
 // by the app
-// TODO: find if there is an easier way to do this
-const allUrls: URL[] = [
-  new URL("../public/py_scripts/example.py", import.meta.url)
-]
+const scriptNames: string[] = [
+  "numpy_example.py",
+  "pandas_example.py",
+];
+
+const allUrls: URL[] = scriptNames.map((scriptName) => {
+  return new URL(`./${scriptName}`, import.meta.url);
+});
 
 class Script {
   path: string;

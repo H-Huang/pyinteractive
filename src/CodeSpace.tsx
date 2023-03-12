@@ -34,7 +34,6 @@ const Wrapper = styled('div')(({ theme }) => ({
 }));
 
 function CodeSpace(props: any) {
-    console.log(props);
     const script = props.script
     // set default value
     let currentValue: string = `# Type any python code here
@@ -46,29 +45,12 @@ print(f"x + y = {x + y}")`
         currentValue = script.contents
     }
 
-
-    // const monaco = useMonaco();
-
-    // const editorRef = useRef(null);
-    // if (script) {
-    //     console.log("in here: " + script.contents)
-    //     editorRef.value = script.contents
-    // }
-  
-    // useEffect(() => {
-    //   if (monaco) {
-    //     console.log("here is the monaco instance:", monaco);
-    //   }
-    // }, [monaco]);
-
     const [pyodide, setPyodide] = useState<any>(null);
-
 
     async function initialize(): Promise<any> {
         // define a custom output handler
         const outputHandler = (text: String) => {
             // handle the output text here
-            console.log(text);
             setStdOut((prevStdOut) => {
                 return prevStdOut + text + "\r\n"
             });
@@ -78,7 +60,12 @@ print(f"x + y = {x + y}")`
         console.log(pyodide)
         await pyodide.loadPackage("micropip");
         const micropip = pyodide.pyimport("micropip");
-        await micropip.install('numpy');
+        const packages = [
+            "numpy",
+            "pandas",
+            // "matplotlib",
+        ]
+        await micropip.install(packages);
         // const scripts = await loadScripts();
         // console.log(scripts)
         pyodide.setStdout({batched: outputHandler});
@@ -86,7 +73,6 @@ print(f"x + y = {x + y}")`
       }
 
     useEffect(() => {
-        console.log("effect")
         initialize().then((pyodide) => {
             setPyodide(pyodide);
             pyodide.runPython(currentValue);
@@ -97,7 +83,6 @@ print(f"x + y = {x + y}")`
 
     function handleEditorChange(value: string | undefined, event: any) {
         setStdOut('');
-        console.log("running")
         pyodide.runPython(value);
     }
 

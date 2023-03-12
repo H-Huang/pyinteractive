@@ -21,7 +21,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import CodeSpace from './CodeSpace';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import Link from '@mui/material/Link';
-import { Script, loadScripts } from './scriptList';
+import { Script, loadScripts } from './py_scripts/scriptList';
 
 declare global {
   interface Window {
@@ -128,6 +128,7 @@ export default function App() {
           <IconButton
             color="inherit"
             aria-label="github link"
+            href="https://github.com/H-Huang/pyinteractive"
           >
             <GitHubIcon />
           </IconButton>
@@ -156,9 +157,6 @@ export default function App() {
           {scripts.map((script, index) => (
             <ListItem key={script.path} disablePadding>
               <ListItemButton onClick={() => setActiveScript(script)}>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
                 <ListItemText primary={script.path} />
               </ListItemButton>
             </ListItem>
