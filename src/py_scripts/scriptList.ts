@@ -23,11 +23,12 @@ async function loadScripts() {
   const scriptList: Script[] = [];
 
   await Promise.all(
-    allUrls.map(async (scriptUrl) => {
+    allUrls.map(async (scriptUrl, index) => {
       console.log("in here")
       const response = await fetch(scriptUrl);
+      console.log(scriptUrl)
       console.log(response)
-      let scriptName: string = scriptUrl.pathname.split("/").pop() ?? "";
+      let scriptName: string = scriptNames[index];
 
       scriptList.push(new Script(scriptName, await response.text()));
     })
