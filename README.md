@@ -4,7 +4,7 @@ PyInteractive is a static site (no backend) which can run arbitrary Python scrip
 
 ## Usage
 
-1. Clone / fork the repo
+1. Clone or fork the repo
 2. Add your Python scripts to the `src/py_scripts/` folder
 3. Update `src/py_scripts/scriptList.ts` with the name of your script
 
@@ -17,4 +17,6 @@ PyInteractive is a static site (no backend) which can run arbitrary Python scrip
 
 Supported python packages
 
+- Python STL except `multiprocessing`
 - `numpy`
+- `pandas`
